@@ -5,6 +5,8 @@ gem 'rails', '~> 6.0.3'
 gem 'sqlite3'
 gem 'puma'
 gem 'jbuilder'
+gem "aftership", "~> 4.3.1"
+gem 'figaro', '~> 1.2'
 
 group :development, :test do
   gem 'byebug', platform: :mri
