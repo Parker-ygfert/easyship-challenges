@@ -6,24 +6,29 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-company = Company.create!(name: 'New Co')
+# company = Company.create!(name: 'New Co')
+company_names = ['New Co', 'New Ltd']
 
-5.times do
-  shipment = Shipment.create(
-    company_id: company.id,
-    destination_country: Faker::Address.country_code,
-    origin_country: Faker::Address.country_code,
-    tracking_number: %w(UM111116399USA UM459056399US).sample,
-    slug: 'usps'
-  )
+company_names.each do |company_name|
+  company = Company.create!(name: company_name)
 
-  20.times do
-    shipment.shipment_items.create(
-      description: %w(iPhone iPad Watch iMac MacBook Mouse Keyboard).sample,
-      weight: (1..5).to_a.sample,
-      shipment_id: shipment.id
+  5.times do
+    shipment = Shipment.create(
+      company_id: company.id,
+      destination_country: Faker::Address.country_code,
+      origin_country: Faker::Address.country_code,
+      tracking_number: %w(UM111116399USA UM459056399US).sample,
+      slug: 'usps'
     )
+  
+    20.times do
+      shipment.shipment_items.create(
+        description: %w(iPhone iPad Watch iMac MacBook Mouse Keyboard).sample,
+        weight: (1..5).to_a.sample,
+        shipment_id: shipment.id
+      )
+    end
+  
+    shipment.save
   end
-
-  shipment.save
 end

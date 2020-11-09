@@ -1,13 +1,21 @@
 require 'aftership'
 
 class ShipmentsController < ApplicationController
+  before_action :set_company
+
   def index
-    @shipments = Shipment.all
+    @shipments = @company.shipments
   end
 
   def show
-    @shipment = Shipment.find(params[:id])
+    @shipment = @company.shipments.find(params[:id])
     AfterShip.api_key = ENV['AFTERSHIP_API_KEY']
     @tracking = AfterShip::V4::Tracking.get(@shipment.slug, @shipment.tracking_number)['data']['tracking']
+  end
+
+  private
+
+  def set_company
+    @company = Company.find(params[:company_id])
   end
 end
