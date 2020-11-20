@@ -1,30 +1,14 @@
 require "rails_helper"
 
 RSpec.describe Shipment, type: :model do
-  let(:company) { Company.create(name: 'New Co') }
-  subject { described_class.create(company: company) }
+  let(:shipment) { FactoryBot.create(:shipment) }
 
-  before do
-    subject.shipment_items.create(
-      description: 'Apple Watch',
-      shipment: subject
-    )
-    2.times do
-      subject.shipment_items.create(
-        description: 'iPhone',
-        shipment: subject
-      )
-    end
-    3.times do
-      subject.shipment_items.create(
-        description: 'iPad',
-        shipment: subject
-      )
-    end
-  end
+  it 'returns grouped shipment items and ordered by count' do
+    FactoryBot.create_list(:shipment_item, 1, description: 'Apple Watch', shipment_id: shipment.id)
+    FactoryBot.create_list(:shipment_item, 2, description: 'iPhone', shipment_id: shipment.id)
+    FactoryBot.create_list(:shipment_item, 3, description: 'iPad', shipment_id: shipment.id)
 
-  it 'test' do
-    group_items = subject.group_shipment_items
+    group_items = shipment.set_shipment_items
     expect(group_items.first).to eq({ description: 'iPad', count: 3 })
     expect(group_items.second).to eq({ description: 'iPhone', count: 2 })
     expect(group_items.last).to eq({ description: 'Apple Watch', count: 1 })
